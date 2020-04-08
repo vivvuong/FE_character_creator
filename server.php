@@ -146,5 +146,16 @@
             }
         }
     }
+
+    if($_POST['command'] == 'delete'){
+        if(isset($_SESSION['username'])){
+            $build_id = filter_input(INPUT_GET, 'build_id', FILTER_SANITIZE_NUMBER_INT);
+
+            $query = "DELETE FROM user_created_characters WHERE build_id = :build_id";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':build_id', $build_id);         
+            $statement->execute();
+        }
+    }
     
 ?>  
