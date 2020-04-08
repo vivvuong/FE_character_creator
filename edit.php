@@ -42,7 +42,7 @@
         <button type="submit" form="form" name="command" value="edit_skills">Edit Skills</button>
     </form>
 
-    <form action="server.php?build_id=<?=$_GET['build_id']?>" method="post" id="form">
+    <form action="skills_add.php?build_id=<?=$_GET['build_id']?>" method="post" id="form">
         <button type="submit" form="form" name="command" value="delete">Delete</button>
     </form>
     </body>
