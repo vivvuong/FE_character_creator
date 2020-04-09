@@ -129,26 +129,12 @@
 
     }
 
-    // if($_POST['command'] == 'edit_skills'){
-
-    //     session_start();
-
-    //     if(isset($_SESSION['username'])){
-    //         $build_id = filter_input(INPUT_GET, 'build_id', FILTER_SANITIZE_NUMBER_INT);
-
-    //         foreach($_POST['skill'] as $skill){ 
-    //             $query = "UPDATE user_skills SET skill_id = :skill_id WHERE build_id = :build_id";
-    //             $statement = $db->prepare($query);
-    //             $statement->bindValue(':build_id', $build_id);        
-    //             $statement->bindValue(':skill_id', $skill);    
-    //             $statement->execute();
-
-    //         }
-    //     }
-    // }
-
     if($_POST['command'] == 'delete'){
+
+        session_start();
+
         if(isset($_SESSION['username'])){
+
             $build_id = filter_input(INPUT_GET, 'build_id', FILTER_SANITIZE_NUMBER_INT);
 
             $query = "DELETE FROM user_created_characters WHERE build_id = :build_id";
@@ -156,8 +142,28 @@
             $statement->bindValue(':build_id', $build_id);         
             $statement->execute();
             
-            echo "test";
+            header('location: index.php');
+        }
+        
+    }
+
+    if($_POST['command'] == 'edit'){
+
+        session_start();
+
+        if(isset($_SESSION['username'])){
+            $build_id = filter_input(INPUT_GET, 'build_id', FILTER_SANITIZE_NUMBER_INT);
+
+            foreach($_POST['skill'] as $skill){ 
+                $query = "UPDATE user_skills SET skill_id = :skill_id WHERE build_id = :build_id";
+                $statement = $db->prepare($query);
+                $statement->bindValue(':build_id', $build_id);        
+                $statement->bindValue(':skill_id', $skill);    
+                $statement->execute();
+
+            }
         }
     }
+
     
 ?>  

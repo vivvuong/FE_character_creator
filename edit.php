@@ -37,9 +37,12 @@
         <h2><?=$skills['skill_name']?></h2>
         <p><?=$skills['description']?></p>
     <?php endforeach ?>
-
+    
     <form action="server.php?build_id=<?=$_GET['build_id']?>" method="post" id="form">
         <button type="submit" form="form" name="command" value="delete">Delete</button>
     </form>
+
+    <form action="skills_add.php?build_id=<?=$_GET['build_id']?>" method="post" id="form">
+        <button type="submit" form="form" name="edit" value="skill">Edit Skills</button>
     </body>
 </html>

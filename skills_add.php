@@ -26,7 +26,7 @@
             $five->execute(); 
         ?>
 
-        <?php if(isset($_POST['command'])):?>
+        <?php if(isset($_POST['edit'])):?>
 
             <?php if($_POST['command'] == 'edit_skills'):?>
                 <form action="server.php" method="POST">

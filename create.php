@@ -25,8 +25,6 @@
 	<?php if(!isset($_SESSION['login'])):?>
 		<?php header('location: index.php'); ?>
 	<?php else:?>
-	<!-- CODE INSIDE HERE -->
-
 		<?php
 			$username = $_SESSION['username'];
 	
@@ -76,8 +74,6 @@
 				<p><?=$statement['description']?><p>
 			<?php endforeach ?>
 		<?php endif ?>	
-
-	<!-- CODE INSIDE HERE -->
 	<?php endif; ?>
 		
 </body>
