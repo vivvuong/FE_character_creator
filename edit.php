@@ -38,11 +38,17 @@
         <p><?=$skills['description']?></p>
     <?php endforeach ?>
     
-    <form action="server.php?build_id=<?=$_GET['build_id']?>" method="post" id="form">
-        <button type="submit" form="form" name="command" value="delete">Delete</button>
+    <form action="server.php?build_id=<?=$_GET['build_id']?>" method="post" id="form1">
+        <button type="submit" form="form1" name="command" value="delete">Delete</button>
     </form>
 
-    <form action="skills_add.php?build_id=<?=$_GET['build_id']?>" method="post" id="form">
-        <button type="submit" form="form" name="edit" value="skill">Edit Skills</button>
+    <form action="skills_add.php?build_id=<?=$_GET['build_id']?>" method="post" id="form2">
+        <button type="submit" form="form2" name="edit" value="skill">Edit Skills</button>
+    </form>
+
+
+    <form action="create.php?build_id=<?=$_GET['build_id']?>" method="post" id="form3">
+        <button type="submit" form="form3" name="edit" value="character">Edit Character & Class</button>
+    </form>
     </body>
 </html>

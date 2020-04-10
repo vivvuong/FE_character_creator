@@ -147,23 +147,54 @@
         
     }
 
-    if($_POST['command'] == 'edit'){
+    if($_POST['command'] == 'edit_skills'){
 
         session_start();
 
         if(isset($_SESSION['username'])){
-            $build_id = filter_input(INPUT_GET, 'build_id', FILTER_SANITIZE_NUMBER_INT);
+
+            $build_id = filter_input(INPUT_POST, 'build_id', FILTER_SANITIZE_NUMBER_INT);
+
+            $query = "DELETE FROM user_skills WHERE build_id = :build_id";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':build_id', $build_id);         
+            $statement->execute();
 
             foreach($_POST['skill'] as $skill){ 
-                $query = "UPDATE user_skills SET skill_id = :skill_id WHERE build_id = :build_id";
+                $query = "INSERT INTO user_skills (build_id, skill_id) values (:build_id, :skill_id)";
                 $statement = $db->prepare($query);
                 $statement->bindValue(':build_id', $build_id);        
                 $statement->bindValue(':skill_id', $skill);    
                 $statement->execute();
-
             }
+
+            header('location: index.php');
         }
     }
+
+    if($_POST['command'] == 'edit_character'){
+
+        session_start();
+
+        if(isset($_SESSION['username'])){
+
+            $build_id = filter_input(INPUT_POST, 'build_id', FILTER_SANITIZE_NUMBER_INT);
+            $character_id  = filter_input(INPUT_POST, 'character', FILTER_SANITIZE_NUMBER_INT);
+            $class_id = filter_input(INPUT_POST, 'class', FILTER_SANITIZE_NUMBER_INT);
+            
+            $query = "UPDATE user_created_characters SET character_id = :character_id, class = :class_id WHERE build_id = :build_id";
+            $statement = $db->prepare($query);        
+            $statement->bindValue(':character_id', $character_id);
+            $statement->bindValue(':class_id', $class_id);
+            $statement->bindValue(':build_id', $build_id, PDO::PARAM_INT);
+            
+            $statement->execute();
+
+            header('location: index.php');
+        }
+    }
+
+    
 
     
 ?>  
