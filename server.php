@@ -208,5 +208,17 @@
 
         header('location: index.php');
     }
+
+    if($_POST['command'] == 'remove_comment'){
+        $comment_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $build = filter_input(INPUT_POST, 'build_id', FILTER_SANITIZE_NUMBER_INT);
+
+        $query = "DELETE FROM comments WHERE comment_id = :id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':id', $comment_id);         
+        $statement->execute();
+
+        header('location: focus.php?build_id=' . $build);
+    }
   
 ?>  

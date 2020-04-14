@@ -76,18 +76,16 @@
             $result = $user->fetch();
         ?>
 
-
-        <form action="server.php" method="POST">
+        <form action="server.php" method="POST" id="form1">
 
             <label for="fname">Add a comment:</label>
             <input type="text" id="comment" name="comment">
             <input type="hidden" id="build_id" name="build" value="<?=$build_id?>">
             <input type="hidden" id="author_id" name="author" value="<?=$result['id']?>">
-            <button type="submit" name="command" value="comment">Submit</button>
+            <button type="submit" form="form1" name="command" value="comment">Submit</button>
             
         </form>
     <?php endif ?>
-
 
     <?php 
         $query = "SELECT * FROM comments
@@ -95,12 +93,24 @@
             WHERE build_id = :build_id";
         $comment = $db->prepare($query); 
         $comment->bindValue(':build_id', $build_id);
-        $comment->execute(); 
+		$comment->execute(); 
+		
     ?>
     <?php foreach($comment as $comment):?>
         <p><?=$comment['content']?></p>
         <p>By <?=$comment['username']?></p>
+
+		<?php if($result['admin'] == 1):?>
+			<form action="server.php?id=<?=$comment['comment_id']?>" method="POST" id="form2">
+				<input type="hidden" id="build_id" name="build_id" value="<?=$build_id?>">
+				<button type="submit" form="form2" name="command" value="remove_comment">Remove</button>
+			</form>
+		<?php endif ?>
+
     <?php endforeach ?>
+
+
+
 
 
 </body>
