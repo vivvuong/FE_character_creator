@@ -7,7 +7,6 @@
 <body>
 	<?php
 		include 'header.php';
-		require 'connect.php';
 
 		$query = "SELECT * FROM characters";
 		$character = $db->prepare($query); 

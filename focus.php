@@ -7,7 +7,6 @@
 <body>
     <?php
         include 'header.php';
-        require 'connect.php';
 
         $build_id  = filter_input(INPUT_GET, 'build_id', FILTER_SANITIZE_NUMBER_INT);
 

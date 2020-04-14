@@ -7,7 +7,6 @@
     <body>
         <?php
             include 'header.php';
-            require 'connect.php';
 
             $query = "SELECT * FROM skills WHERE type = 2";
             $two = $db->prepare($query); 

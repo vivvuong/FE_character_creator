@@ -30,7 +30,8 @@
         }
         else{
             $password = password_hash($password, PASSWORD_DEFAULT);
-            $query= "INSERT INTO users (id, username, password, email) values (NULL, :username, :password, :email)";
+
+            $query= "INSERT INTO users (id, username, password, email, profile_image_name, profile_image_type) values (NULL, :username, :password, :email, 'default', 'png')";
             $statement = $db->prepare($query);
             $statement->bindValue(':username', $username);
             $statement->bindValue(':password', $password); 
@@ -40,6 +41,7 @@
 
             $_SESSION['login'] = true;
             $_SESSION['username'] = $username;    
+
             header('location: index.php');
         }
     }
@@ -95,7 +97,6 @@
             $statement->bindValue(':character', $character);        
             $statement->bindValue(':class', $class);
             $statement->bindValue(':userid', $userid);
-             
             $statement->execute();
 
             $query = "SELECT * FROM user_created_characters WHERE username_id = :userid";
@@ -190,6 +191,22 @@
 
         header('location: focus.php?build_id=' . $build);
 
+    }
+
+    if($_POST['command'] == 'change_image'){
+
+        $image_name = filter_input(INPUT_POST, 'image_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $username_id = filter_input(INPUT_POST, 'username_id', FILTER_SANITIZE_NUMBER_INT);
+        $image_type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        $query = "UPDATE users SET profile_image_name = :image_name, profile_image_type = :image_type WHERE id = :username_id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':image_name', $image_name);        
+        $statement->bindValue(':username_id', $username_id);
+        $statement->bindValue(':image_type', $image_type);
+        $statement->execute();
+
+        header('location: index.php');
     }
   
 ?>  

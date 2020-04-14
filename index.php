@@ -7,8 +7,6 @@
 <body>
 	<?php
 		include 'header.php';
-		require 'connect.php';
-
 	?>
 
 	<?php if(isset($_SESSION['login'])):?>

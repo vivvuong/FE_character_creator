@@ -8,7 +8,6 @@
 
     <?php
         include 'header.php';
-        require 'connect.php';
 
         $query = "SELECT * FROM skills WHERE skill_id > 1000 AND skill_id < 2000";
         $class = $db->prepare($query); 
