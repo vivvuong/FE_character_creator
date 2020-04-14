@@ -23,14 +23,13 @@
 	?>
 		
 	<?php if(!isset($_SESSION['login'])):?>
-
 		<?php header('location: index.php'); ?>
-
 	<?php else:?>
+	<!-- CODE INSIDE HERE -->
 
 		<?php
 			$username = $_SESSION['username'];
-
+	
 			$query = "SELECT * FROM users WHERE username = :username";
 			$statement = $db->prepare($query); 
 			$statement->bindValue(':username', $username);
@@ -38,11 +37,11 @@
 			$results = $statement->fetch();
 		?>
 
-		<?php if($_POST['edit'] == 'character'):
-			$build_id = filter_input(INPUT_GET, 'build_id', FILTER_SANITIZE_NUMBER_INT);
-		?>
+		<form action="server.php?user=<?=$results['id']?>" method="POST">
 
-			<form action="server.php?user=<?=$build_id?>" method="POST">
+			<label for="fname">Build Name:</label>
+			<input type="text" id="title" name="title">
+
 			<label for="character">Choose a character:</label>
 			<select name="character">
 				<?php foreach($character as $character):?>
@@ -56,31 +55,33 @@
 					<option value="<?=$classes['class_id']?>"><?=$classes['class_name']?></option>
 				<?php endforeach ?>
 			</select>
-			<button type="submit" name="command" value="edit_character">Submit</button>
-			<input type="hidden" id="build_id" name="build_id" value="<?=$build_id?>">
-			</form>
 
-		<?php else:?>
-
-			<form action="server.php?user=<?=$results['id']?>" method="POST">
-				<label for="character">Choose a character:</label>
-				<select name="character">
-					<?php foreach($character as $character):?>
-						<option value="<?=$character['character_id']?>"><?=$character['character_name']?></option>
-					<?php endforeach ?>
-				</select>
-
-				<label for="class">Choose a class:</label>
-				<select name="class">
-					<?php foreach($classes as $classes):?>
-						<option value="<?=$classes['class_id']?>"><?=$classes['class_name']?></option>
-					<?php endforeach ?>
-				</select>
 			<button type="submit" name="command" value="create">Submit</button>
-			</form>
+		</form>
 
-		<?php endif ?>
+		<?php if(isset($_POST['command'])):?>
+			<?php 
+				$character  = filter_input(INPUT_POST, 'character', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				$class  = filter_input(INPUT_POST, 'class', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
+				$query = "SELECT * FROM class_skills 
+					JOIN classes ON class_skills.class_id = classes.class_id
+					JOIN skills ON class_skills.class_skill = skills.skill_id
+					WHERE classes.class_name = :class";
+				$statement = $db->prepare($query); 
+				$statement->bindValue(':class', $class);
+				$statement->execute(); 
+			?>
+			<img src="images/<?=$character?>.png" alt="<?=$character?>">
+			<h2><?=$class?></h2>
+			<?php foreach($statement as $statement):?>
+				<h3><?=$statement['skill_name']?></h3>
+				<p><?=$statement['description']?><p>
+			<?php endforeach ?>
+		<?php endif ?>	
+
+	<!-- CODE INSIDE HERE -->
 	<?php endif; ?>
+		
 </body>
 </html>
