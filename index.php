@@ -60,7 +60,6 @@
 			<h5>Currently Sorted By: <?=$_POST['sort']?></h5>
 		<?php endif ?>
 		
-		</br>
 
 	<?php foreach($statement as $user):	?>
 		<?php
@@ -82,7 +81,7 @@
 			$statement->execute();		
 		?>
 
-		<h1><?=$user['build_title']?></h1>
+		<h1><a href="focus.php?build_id=<?=$user['build_id']?>"><?=$user['build_title']?></a></h1>
 
 		<img src="images/<?=$user['character_name']?>.png" alt="<?=$user['character_name']?>">
 		<h1><?=$user['character_name']?> / <?=$user['class_name']?></h2>
@@ -136,7 +135,7 @@
 				$statement->execute();		
 			?>
 
-			<h1><?=$user['build_title']?></h1>
+			<h1><a href="focus.php?build_id=<?=$user['build_id']?>"><?=$user['build_title']?></a></h1>
 
 			<img src="images/<?=$user['character_name']?>.png" alt="<?=$user['character_name']?>">
 			<h1><?=$user['character_name']?> / <?=$user['class_name']?></h2>

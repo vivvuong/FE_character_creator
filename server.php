@@ -174,9 +174,22 @@
         }
     }
 
+
+    if($_POST['command'] == 'comment'){
+
+        $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $build = filter_input(INPUT_POST, 'build', FILTER_SANITIZE_NUMBER_INT);
+        $author  = filter_input(INPUT_POST, 'author', FILTER_SANITIZE_NUMBER_INT);
+
+        $query = "INSERT INTO comments (comment_id, author_id, content, build_id) values (NULL, :author_id, :content, :build_id)";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':build_id', $build);        
+        $statement->bindValue(':author_id', $author);    
+        $statement->bindValue(':content', $comment);    
+        $statement->execute();
+
+        header('location: focus.php?build_id=' . $build);
+
+    }
   
-
-    
-
-    
 ?>  
