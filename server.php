@@ -116,10 +116,8 @@
         if(isset($_SESSION['username'])){
 
             $build_id = filter_input(INPUT_POST, 'build_id', FILTER_SANITIZE_NUMBER_INT);
-            // $skills = filter_input_array(INPUT_POST, 'skills', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             foreach($_POST['skill'] as $skill){ 
-                // $skill = filter_input_array(INPUT_POST, $skill, FILTER_SANITIZE_NUMBER_INT);
                 $query = "INSERT INTO user_skills (build_id, skill_id) values (:build_id, :skill_id)";
                 $statement = $db->prepare($query);
                 $statement->bindValue(':build_id', $build_id);        
@@ -220,5 +218,97 @@
 
         header('location: focus.php?build_id=' . $build);
     }
-  
+
+    if($_POST['command'] == 'admin_user'){
+        session_start();
+
+        $_SESSION['reg_error'] = "";
+
+        $username  = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $password  = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $password2 = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $email  = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        $query = "SELECT * FROM users WHERE username = :username";
+        $statement = $db->prepare($query); 
+        $statement->bindValue(':username', $username);
+
+        $statement->execute();
+
+        $result = $statement->fetch();
+
+        if($username === $result['username']){
+            $_SESSION['reg_error'] = "Username is already taken, try again.";
+            header('location: signup.php');
+        }
+        else if($password != $password2){
+            $_SESSION['reg_error'] = "Passwords do not match, try again.";
+            header('location: signup.php');
+        }
+        else{
+            $password = password_hash($password, PASSWORD_DEFAULT);
+
+            $query= "INSERT INTO users (id, username, password, email, profile_image_name, profile_image_type) values (NULL, :username, :password, :email, 'default', 'png')";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':username', $username);
+            $statement->bindValue(':password', $password); 
+            $statement->bindValue(':email', $email);
+            $statement->execute();
+            $insert_id = $db->lastInsertId();
+
+            header('location: index.php');
+        }
+    }
+
+    if($_POST['command'] == 'change_name'){
+        $username_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $new_username = filter_input(INPUT_POST, 'new_username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        $query = "UPDATE users SET username = :new_username WHERE id = :username_id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':new_username', $new_username);
+        $statement->bindValue(':username_id', $username_id);
+        $statement->execute();
+
+        header('location: user.php?user_id=' . $username_id);
+    }
+
+    if($_POST['command'] == 'change_password'){
+        session_start();
+
+        $_SESSION['reg_error'] = "";
+
+        $username_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $password  = filter_input(INPUT_POST, 'new_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $password2 = filter_input(INPUT_POST, 'confirm_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        if($password != $password2){
+            $_SESSION['reg_error'] = "Passwords do not match, try again.";
+            header('location: user.php?user_id=' . $username_id);
+        }
+        else{
+            $password = password_hash($password, PASSWORD_DEFAULT);
+
+            $query = "UPDATE users SET password = :new_password WHERE id = :username_id";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':new_password', $password);
+            $statement->bindValue(':username_id', $username_id);
+            $statement->execute();
+
+            header('location: user.php?user_id=' . $username_id);
+        }
+    }
+
+    if($_POST['command'] == 'delete_user'){
+        $username_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+
+        echo $username_id;
+        
+        $query = "DELETE FROM users WHERE id = :username_id LIMIT 1";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':username_id', $username_id);
+        $statement->execute();
+
+        header('location: admin.php');
+    }
 ?>  

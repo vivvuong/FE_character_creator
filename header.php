@@ -10,13 +10,20 @@
 			<a href="characters.php">Characters</a>
 			<a href="skills.php">Skills</a>
 
-			<?php if(isset($_SESSION['login']) && isset($_SESSION['username'])):?>
+			<?php if(isset($_SESSION['login']) && isset($_SESSION['username'])):
+				$query = "SELECT * FROM users WHERE username = :username";
+				$statement = $db->prepare($query);
+				$statement->bindValue(':username', $_SESSION['username']);
+				$statement->execute();
+				$result = $statement->fetch();
+				?>
 					<a href="create.php">Create</a>
+					<?php if($result['admin'] == 1):?>
+						<a href="admin.php">Users</a>
+					<?php endif ?>
 					<a href="logout.php">Logout</a>
 					Welcome <a href="profile.php"><?=$_SESSION['username']?></a>!
 
-
-	
 					<?php 
 						$username = $_SESSION['username'];
 
