@@ -207,6 +207,27 @@
         header('location: index.php');
     }
 
+    if($_POST['command'] == 'delete_image'){
+        $username_id = filter_input(INPUT_POST, 'username_id', FILTER_SANITIZE_NUMBER_INT);
+
+        $query = "SELECT * FROM users WHERE id = :username_id";
+        $statement =$db->prepare($query);
+        $statement->bindValue(':username_id', $username_id);
+        $statement->execute();
+        $result = $statement->fetch();
+
+        unlink('profile_uploads/' . $result['profile_image_name'] . '.' . $result['profile_image_type']);
+        unlink('profile_uploads/' . $result['profile_image_name'] . '_medium' . '.' . $result['profile_image_type']);
+        unlink('profile_uploads/' . $result['profile_image_name'] . '_thumbnail' . '.' . $result['profile_image_type']);
+
+        $query = "UPDATE users SET profile_image_name = 'default', profile_image_type = 'png' WHERE id = :username_id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':username_id', $username_id);
+        $statement->execute();
+
+        header('location: index.php');
+    }
+
     if($_POST['command'] == 'remove_comment'){
         $comment_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
         $build = filter_input(INPUT_POST, 'build_id', FILTER_SANITIZE_NUMBER_INT);
