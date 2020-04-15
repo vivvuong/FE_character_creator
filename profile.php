@@ -63,10 +63,21 @@
          <input type='submit' name='submit' value='Upload Image'>
     </form>
 
-    <form action="server.php" method="POST">
-        <input type="hidden" id="username_id" name="username_id" value="<?=$result['id']?>">
-        <button type="submit" name="command" value="delete_image">Reset Profile Picture</button>
-    </form>
+    <?php 
+        $username = $_SESSION['username'];
+        
+        $query = "SELECT * FROM users WHERE username = :username";
+        $statement =$db->prepare($query);
+        $statement->bindValue(':username', $username);
+        $statement->execute();
+        $result = $statement->fetch();
+    ?>
+    <?php if($result['profile_image_name'] != 'default'):?>
+        <form action="server.php" method="POST">
+            <input type="hidden" id="username_id" name="username_id" value="<?=$result['id']?>">
+            <button type="submit" name="command" value="delete_image">Reset Profile Picture</button>
+        </form>
+    <?php endif ?>
      
     <?php if ($upload_error_detected): ?>
 
